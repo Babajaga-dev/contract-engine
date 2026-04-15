@@ -477,8 +477,8 @@ contract BestiaryV4PremintTest is Test {
         fast.setMintStatus(true);
 
         vm.prank(user2, user2);
-        uint256 reqId = fast.freeMint();
-        vrfCoord.fulfillWithSeed(reqId, address(fast), 999);
+        uint256 reqId2 = fast.freeMint();
+        vrfCoord.fulfillWithSeed(reqId2, address(fast), 999);
 
         // totalSupply should be preminted + publicMinted
         assertEq(fast.totalSupply(), 6);

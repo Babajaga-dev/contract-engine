@@ -169,7 +169,7 @@ contract ForgeV4TournamentTest is Test {
         ids[0] = forgedId;
 
         vm.prank(tournamentAddr);
-        forge.lockTokens(ids);
+        forge.setTokenLock(ids, true);
 
         assertTrue(forge.tokenLocked(forgedId));
     }
@@ -183,7 +183,7 @@ contract ForgeV4TournamentTest is Test {
 
         vm.prank(alice);
         vm.expectRevert(SatoshiForgeV4.NotTournamentContract.selector);
-        forge.lockTokens(ids);
+        forge.setTokenLock(ids, true);
     }
 
     function test_lockTokens_emptyArray_reverts() public {
@@ -193,7 +193,7 @@ contract ForgeV4TournamentTest is Test {
 
         vm.prank(tournamentAddr);
         vm.expectRevert(SatoshiForgeV4.NoTokensProvided.selector);
-        forge.lockTokens(ids);
+        forge.setTokenLock(ids, true);
     }
 
     function test_transfer_lockedForgedToken_reverts() public {
@@ -204,7 +204,7 @@ contract ForgeV4TournamentTest is Test {
         ids[0] = forgedId;
 
         vm.prank(tournamentAddr);
-        forge.lockTokens(ids);
+        forge.setTokenLock(ids, true);
 
         // Try to transfer locked forged token
         vm.prank(alice);
@@ -220,11 +220,11 @@ contract ForgeV4TournamentTest is Test {
         ids[0] = forgedId;
 
         vm.prank(tournamentAddr);
-        forge.lockTokens(ids);
+        forge.setTokenLock(ids, true);
 
         // Unlock
         vm.prank(tournamentAddr);
-        forge.unlockTokens(ids);
+        forge.setTokenLock(ids, false);
 
         assertFalse(forge.tokenLocked(forgedId));
 
