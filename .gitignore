@@ -1,2 +1,7 @@
 out/
 cache/
+# forge-std e openzeppelin installati via forge install (non tracciati)
+lib/forge-std/
+lib/openzeppelin-contracts/
+# chainlink è vendorizzato — DEVE essere tracciato
+# lib/chainlink/ → tracciato nel repo
