@@ -3,7 +3,7 @@ pragma solidity ^0.8.20;
 
 import "forge-std/Test.sol";
 import "./mocks/TestableBestiaryV4.sol";
-import "../tests/mocks/MockVRFCoordinator.sol";
+import "./mocks/MockVRFCoordinator.sol";
 
 /**
  * @title BestiaryV4_Tournament.t.sol

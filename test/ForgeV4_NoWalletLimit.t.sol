@@ -4,8 +4,8 @@ pragma solidity ^0.8.20;
 import "forge-std/Test.sol";
 import "./mocks/TestableBestiaryV4.sol";
 import "./mocks/MockVRFCoordinator.sol";
-import "../contracts/SatoshiForgeV4.sol";
-import "../contracts/SatoshiBestiaryV4.sol";
+import "../src/SatoshiForgeV4.sol";
+import "../src/SatoshiBestiaryV4.sol";
 
 /**
  * @title ForgeV4_NoWalletLimit.t.sol

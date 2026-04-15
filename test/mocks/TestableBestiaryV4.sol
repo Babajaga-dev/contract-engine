@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.20;
 
-import "../../contracts/SatoshiBestiaryV4.sol";
+import "../../src/SatoshiBestiaryV4.sol";
 
 /**
  * @title TestableBestiaryV4 (Foundry)
