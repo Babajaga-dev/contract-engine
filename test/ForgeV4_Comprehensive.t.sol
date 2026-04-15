@@ -309,7 +309,7 @@ contract ForgeV4ComprehensiveTest is Test {
     }
 
     function test_getForgedTypeId_revert_BelowRange() public {
-        uint256 invalidId = RARE_FORGED_START - 1; // Sotto il range piu' basso della Forge
+        uint256 invalidId = 20000; // Below mythicForgedStartId (21001) — not a forged token
         vm.expectRevert(SatoshiForgeV4.InvalidForgedTypeId.selector);
         forgeContract.getForgedTypeId(invalidId);
     }

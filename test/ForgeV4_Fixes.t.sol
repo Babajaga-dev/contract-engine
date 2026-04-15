@@ -172,7 +172,7 @@ contract ForgeV4FixesTest is Test {
 
     function test_setBestiaryContract_nonOwner_reverts() public {
         vm.prank(alice);
-        vm.expectRevert(SatoshiForgeV4.OnlyOwner.selector);
+        vm.expectRevert(abi.encodeWithSignature("OwnableUnauthorizedAccount(address)", alice));
         forge.setBestiaryContract(address(bestiary2));
     }
 

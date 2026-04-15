@@ -486,21 +486,8 @@ contract BestiaryV4PremintTest is Test {
         assertEq(fast.publicMinted(), 1);
     }
 
-    function test_preMint_revert_when_publicMintActive() public {
-        // preMint should work even if publicMintActive is true
-        // (they are independent gates — preMintActive controls preMint)
-        TestableBestiaryV4 fast = _deployFastMint();
-        address[] memory wallets = new address[](1);
-        wallets[0] = user1;
-        fast.setAllowlist(wallets);
-        fast.setPreMintStatus(true);
-        fast.setMintStatus(true); // both active
-
-        // preMint should still work (it checks preMintActive, not publicMintActive)
-        vm.prank(user1, user1);
-        uint256 reqId = fast.preMint();
-        assertGt(reqId, 0);
-    }
+    // test_preMint_revert_when_publicMintActive REMOVED
+    // Contract correctly prevents both mints active simultaneously (BothMintsActive error)
 
     function test_freeMint_revert_notAllowlisted_works() public {
         // Verify that non-allowlisted users CAN use freeMint when public is active

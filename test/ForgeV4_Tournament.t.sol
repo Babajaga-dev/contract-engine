@@ -20,14 +20,14 @@ contract ForgeV4TournamentTest is Test {
     address alice;
     address tournamentAddr;
 
-    // Forge start IDs (V4 parametric)
-    uint256 constant RARE_FORGED_START = 21001;
-    uint256 constant EPIC_FORGED_START = 21253;
-    uint256 constant LEGENDARY_FORGED_START = 21463;
-    uint256 constant MYTHIC_FORGED_START = 21568;
-    uint256 constant MYTHIC_SHARD_START = 21589;
-    uint256 constant APEX_START = 21598;
-    uint256 constant RELIQUIA_START = 21601;
+    // Forge start IDs (V4 parametric — ascending: mythic < legendary < epic < rare < shard < apex < reliquia)
+    uint256 constant MYTHIC_FORGED_START = 21001;
+    uint256 constant LEGENDARY_FORGED_START = 21022;   // 21001 + 21
+    uint256 constant EPIC_FORGED_START = 21127;        // 21022 + 105
+    uint256 constant RARE_FORGED_START = 21337;        // 21127 + 210
+    uint256 constant MYTHIC_SHARD_START = 21589;       // 21337 + 252
+    uint256 constant APEX_START = 21598;               // 21589 + 9
+    uint256 constant RELIQUIA_START = 21601;           // 21598 + 3
 
     // Bestiary tier boundaries (Genesis)
     uint256 constant COMMON_START = 7351;
