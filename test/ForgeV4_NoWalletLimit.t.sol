@@ -233,7 +233,7 @@ contract ForgeV4NoWalletLimitTest is Test {
             vm.prank(alice);
             uint256[] memory legends = _createTokenArray(LEGENDARY_START + i * RELIQUIA_INPUT_COUNT, RELIQUIA_INPUT_COUNT);
             forgeContract.forgeReliquia{value: FEE_RELIQUIA}(legends);
-            assertEq(forgeContract.reliquiaCount(), i + 1, "Should mint Reliquia at index %d", i);
+            assertEq(forgeContract.reliquiaCount(), i + 1, "Should mint Reliquia");
         }
 
         assertEq(forgeContract.reliquiaCount(), 5, "Global count should be 5");
