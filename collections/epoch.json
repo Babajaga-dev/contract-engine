@@ -1,5 +1,5 @@
 {
-  "_comment": "Parametri collection Epoch (21K) per deploy SatoshiBestiaryV4 + SatoshiForgeV4",
+  "_comment": "Parametri collection Epoch (42K — Genesis x2) per deploy SatoshiBestiaryV4 + SatoshiForgeV4. Era II — Primo Halving (Block 210000).",
   "_version": "1.0",
 
   "collection": {
@@ -9,13 +9,13 @@
   },
 
   "bestiary": {
-    "maxSupply": 21000,
-    "devReserve": 2100,
+    "maxSupply": 42000,
+    "devReserve": 4200,
     "maxPerWallet": 10,
     "mintBlock": 5,
     "mintCooldown": 7200,
     "totalSpecies": 42,
-    "tierBoundaries": [21, 1050, 3150, 7350, 21000],
+    "tierBoundaries": [42, 2100, 6300, 14700, 42000],
     "speciesPerTier": [2, 7, 10, 10, 13],
     "royaltyBps": 500
   },
@@ -26,23 +26,23 @@
     "royaltyBps": 500,
 
     "supply": {
-      "maxRareForged": 252,
-      "maxEpicForged": 210,
-      "maxLegendaryForged": 105,
-      "maxMythicForged": 21,
-      "maxReliquia": 21,
-      "maxMythicShard": 9,
-      "maxApex": 3
+      "maxRareForged": 504,
+      "maxEpicForged": 420,
+      "maxLegendaryForged": 210,
+      "maxMythicForged": 42,
+      "maxReliquia": 42,
+      "maxMythicShard": 18,
+      "maxApex": 6
     },
 
     "startIds": {
-      "mythicForgedStartId": 21001,
-      "legendaryForgedStartId": 21022,
-      "epicForgedStartId": 21127,
-      "rareForgedStartId": 21337,
-      "mythicShardStartId": 21589,
-      "apexStartId": 21598,
-      "reliquiaStartId": 21601
+      "mythicForgedStartId": 42001,
+      "legendaryForgedStartId": 42043,
+      "epicForgedStartId": 42253,
+      "rareForgedStartId": 42673,
+      "mythicShardStartId": 43177,
+      "apexStartId": 43195,
+      "reliquiaStartId": 43201
     },
 
     "species": {
@@ -53,14 +53,14 @@
     },
 
     "bestiaryBoundaries": {
-      "bestiaryCommonStart": 7351,
-      "bestiaryCommonEnd": 21000,
-      "bestiaryRareStart": 3151,
-      "bestiaryRareEnd": 7350,
-      "bestiaryEpicStart": 1051,
-      "bestiaryEpicEnd": 3150,
-      "bestiaryLegendaryStart": 22,
-      "bestiaryLegendaryEnd": 1050
+      "bestiaryCommonStart": 14701,
+      "bestiaryCommonEnd": 42000,
+      "bestiaryRareStart": 6301,
+      "bestiaryRareEnd": 14700,
+      "bestiaryEpicStart": 2101,
+      "bestiaryEpicEnd": 6300,
+      "bestiaryLegendaryStart": 43,
+      "bestiaryLegendaryEnd": 2100
     },
 
     "defaultFees": {
