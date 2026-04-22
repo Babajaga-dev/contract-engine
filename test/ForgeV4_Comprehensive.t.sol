@@ -141,7 +141,7 @@ contract ForgeV4ComprehensiveTest is Test {
 
         testableForge = new SatoshiForgeV4(
             "Satoshi Genesis Forged",
-            "SFORGE",
+            "FORGE",
             address(bestiary),
             forgeParams,
             forgeVrf,

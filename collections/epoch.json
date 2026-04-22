@@ -5,7 +5,7 @@
   "collection": {
     "id": "epoch",
     "name": "Satoshi Epoch",
-    "symbol": "SATB2"
+    "symbol": "EPOCH"
   },
 
   "bestiary": {
@@ -22,7 +22,7 @@
 
   "forge": {
     "name": "Satoshi Epoch Forged",
-    "symbol": "SFORGEEPOCH",
+    "symbol": "ANVIL",
     "royaltyBps": 500,
 
     "supply": {

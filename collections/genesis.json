@@ -5,7 +5,7 @@
   "collection": {
     "id": "genesis",
     "name": "Satoshi Genesis",
-    "symbol": "SATB"
+    "symbol": "CODEX"
   },
 
   "bestiary": {
@@ -22,7 +22,7 @@
 
   "forge": {
     "name": "Satoshi Genesis Forged",
-    "symbol": "SFORGE",
+    "symbol": "FORGE",
     "royaltyBps": 500,
 
     "supply": {

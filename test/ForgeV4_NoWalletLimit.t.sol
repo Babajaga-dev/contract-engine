@@ -142,7 +142,7 @@ contract ForgeV4NoWalletLimitTest is Test {
 
         forgeContract = new SatoshiForgeV4(
             "Satoshi Genesis Forged",
-            "SFORGE",
+            "FORGE",
             address(bestiary),
             forgeParams,
             forgeVrf,

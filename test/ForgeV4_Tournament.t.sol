@@ -74,7 +74,7 @@ contract ForgeV4TournamentTest is Test {
         // Deploy Forge
         forge = new SatoshiForgeV4(
             "Satoshi Genesis Forged",
-            "SFORGE",
+            "FORGE",
             address(bestiary),
             SatoshiForgeV4.ForgeParams({
                 maxRareForged: 252,

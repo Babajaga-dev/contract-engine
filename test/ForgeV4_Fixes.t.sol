@@ -126,7 +126,7 @@ contract ForgeV4FixesTest is Test {
 
         forge = new SatoshiForgeV4(
             "Satoshi Genesis Forged",
-            "SFORGE",
+            "FORGE",
             address(bestiary),
             fp,
             forgeVrf,
