@@ -18,3 +18,16 @@ remappings = [
     "@openzeppelin/contracts/=lib/openzeppelin-contracts/contracts/",
     "@chainlink/contracts/=lib/chainlink/contracts/"
 ]
+
+# Lint filter — silence style-only noise, keep security-relevant warnings.
+# Excluded lints are conventions (Chainlink VRF, OZ v5 immutable, acronyms NFT/VRF)
+# that would break ABI compat if changed. Real warnings (unsafe-typecast, unused,
+# named-struct-fields) stay visible for the CYBER agent to review pre-mainnet.
+[lint]
+exclude_lints = [
+    "screaming-snake-case-immutable",
+    "mixed-case-function",
+    "mixed-case-variable",
+    "pascal-case-struct",
+    "unaliased-plain-import",
+]
