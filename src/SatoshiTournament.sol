@@ -647,15 +647,18 @@ contract SatoshiTournament is AccessControl, Pausable, ReentrancyGuard, IERC721R
 
         t.matchLogsRoot = matchLogsRoot;
 
+        // uint16 cast safe: winners.length <= MAX_PRIZE_SPLIT_ENTRIES (32) << 2^16
         for (uint256 i; i < winners.length; i++) {
             if (!isRegistered[tournamentId][winners[i]]) revert WinnerNotRegistered();
+            // forge-lint: disable-next-line(unsafe-typecast)
+            uint16 pos = uint16(i + 1);
             // M-01: verifica unicità — il piazzamento per questa posizione deve essere vuoto
-            if (placements[tournamentId][uint16(i + 1)] != address(0)) revert DuplicateWinner();
+            if (placements[tournamentId][pos] != address(0)) revert DuplicateWinner();
             // Verifica che questo indirizzo non sia già stato piazzato in una posizione precedente
             for (uint256 j; j < i; j++) {
                 if (winners[j] == winners[i]) revert DuplicateWinner();
             }
-            placements[tournamentId][uint16(i + 1)] = winners[i]; // 1-indexed
+            placements[tournamentId][pos] = winners[i]; // 1-indexed
         }
         placementCount[tournamentId] = uint16(winners.length); // L-02: uint16
 
@@ -768,6 +771,7 @@ contract SatoshiTournament is AccessControl, Pausable, ReentrancyGuard, IERC721R
         NftPrize[] storage nfts = tournamentNftPrizes[tournamentId];
         for (uint256 i; i < nfts.length; i++) {
             // M-03: safe cast — position is always <= MAX_PRIZE_SPLIT_ENTRIES (32)
+            // forge-lint: disable-next-line(unsafe-typecast)
             if (nfts[i].placement == uint8(position) && !nfts[i].claimed) {
                 nfts[i].claimed = true;
                 nftAllocatedToTournament[nfts[i].nftContract][nfts[i].tokenId] = 0; // H-02: clear

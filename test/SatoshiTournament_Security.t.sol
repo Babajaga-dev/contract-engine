@@ -872,6 +872,8 @@ contract SatoshiTournamentSecurityTest is Test {
         vm.prank(arbiter);
         tournament.submitResults(tid, winners, keccak256("stress-results"));
 
+        // uint8 cast safe: count bounded by MAX_PRIZE_SPLIT_ENTRIES (32)
+        // forge-lint: disable-next-line(unsafe-typecast)
         assertEq(tournament.placementCount(tid), uint8(count));
     }
 

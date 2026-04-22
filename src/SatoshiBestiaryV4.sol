@@ -434,33 +434,41 @@ contract SatoshiBestiaryV4 is ERC721C, ERC2981, VRFConsumerBaseV2Plus, Reentranc
 
         uint256 idx;
 
+        // uint8 cast safe: idx is clamped to _speciesPerTier{N} (uint8 immutable),
+        // so idx < 256 always. Constructor validates speciesPerTier sums to totalSpecies.
+
         // Tier 0 (Mythic)
         if (tokenId <= _tierBound0) {
             idx = (tokenId - 1) / _cardsPerSpecies0;
             if (idx >= _speciesPerTier0) idx = _speciesPerTier0 - 1;
+            // forge-lint: disable-next-line(unsafe-typecast)
             return _speciesOffset0 + uint8(idx);
         }
         // Tier 1 (Legendary)
         if (tokenId <= _tierBound1) {
             idx = (tokenId - _tierBound0 - 1) / _cardsPerSpecies1;
             if (idx >= _speciesPerTier1) idx = _speciesPerTier1 - 1;
+            // forge-lint: disable-next-line(unsafe-typecast)
             return _speciesOffset1 + uint8(idx);
         }
         // Tier 2 (Epic)
         if (tokenId <= _tierBound2) {
             idx = (tokenId - _tierBound1 - 1) / _cardsPerSpecies2;
             if (idx >= _speciesPerTier2) idx = _speciesPerTier2 - 1;
+            // forge-lint: disable-next-line(unsafe-typecast)
             return _speciesOffset2 + uint8(idx);
         }
         // Tier 3 (Rare)
         if (tokenId <= _tierBound3) {
             idx = (tokenId - _tierBound2 - 1) / _cardsPerSpecies3;
             if (idx >= _speciesPerTier3) idx = _speciesPerTier3 - 1;
+            // forge-lint: disable-next-line(unsafe-typecast)
             return _speciesOffset3 + uint8(idx);
         }
         // Tier 4 (Common)
         idx = (tokenId - _tierBound3 - 1) / _cardsPerSpecies4;
         if (idx >= _speciesPerTier4) idx = _speciesPerTier4 - 1;
+        // forge-lint: disable-next-line(unsafe-typecast)
         return _speciesOffset4 + uint8(idx);
     }
 
@@ -485,9 +493,19 @@ contract SatoshiBestiaryV4 is ERC721C, ERC2981, VRFConsumerBaseV2Plus, Reentranc
         lastMintBlock[msg.sender] = block.number;
         publicPending += mintBlock;
 
-        requestId = _requestVRF(uint32(mintBlock));
+        // uint32 cast safe: mintBlock is immutable, validated in constructor (< 2^32)
+        // forge-lint: disable-next-line(unsafe-typecast)
+        uint32 amount = uint32(mintBlock);
 
-        _mintRequests[requestId] = MintRequest(msg.sender, uint32(mintBlock), block.number, 0, false);
+        requestId = _requestVRF(amount);
+
+        _mintRequests[requestId] = MintRequest({
+            minter: msg.sender,
+            amount: amount,
+            requestBlock: block.number,
+            feePaid: 0,
+            isPreMint: false
+        });
         requestStatus[requestId] = CallbackStatus.PENDING;
         _pendingMintRequestIds.push(requestId);
 
@@ -520,10 +538,20 @@ contract SatoshiBestiaryV4 is ERC721C, ERC2981, VRFConsumerBaseV2Plus, Reentranc
         lastMintBlock[msg.sender] = block.number;
         premintPending += mintBlock;
 
-        requestId = _requestVRF(uint32(mintBlock));
+        // uint32 cast safe: mintBlock is immutable, validated in constructor (< 2^32)
+        // forge-lint: disable-next-line(unsafe-typecast)
+        uint32 amount = uint32(mintBlock);
+
+        requestId = _requestVRF(amount);
 
         // Reuse MintRequest struct — feePaid = 0 for free premint, isPreMint = true
-        _mintRequests[requestId] = MintRequest(msg.sender, uint32(mintBlock), block.number, 0, true);
+        _mintRequests[requestId] = MintRequest({
+            minter: msg.sender,
+            amount: amount,
+            requestBlock: block.number,
+            feePaid: 0,
+            isPreMint: true
+        });
         requestStatus[requestId] = CallbackStatus.PENDING;
         _pendingMintRequestIds.push(requestId);
 
@@ -555,9 +583,19 @@ contract SatoshiBestiaryV4 is ERC721C, ERC2981, VRFConsumerBaseV2Plus, Reentranc
         pendingPerWallet[msg.sender] += quantity;
         publicPending += quantity;
 
-        requestId = _requestVRF(uint32(quantity));
+        // uint32 cast safe: quantity bounded by mintBlock immutable (< 2^32), checked above
+        // forge-lint: disable-next-line(unsafe-typecast)
+        uint32 amount = uint32(quantity);
 
-        _mintRequests[requestId] = MintRequest(msg.sender, uint32(quantity), block.number, totalCost, false);
+        requestId = _requestVRF(amount);
+
+        _mintRequests[requestId] = MintRequest({
+            minter: msg.sender,
+            amount: amount,
+            requestBlock: block.number,
+            feePaid: totalCost,
+            isPreMint: false
+        });
         requestStatus[requestId] = CallbackStatus.PENDING;
         _pendingMintRequestIds.push(requestId);
 
@@ -572,9 +610,17 @@ contract SatoshiBestiaryV4 is ERC721C, ERC2981, VRFConsumerBaseV2Plus, Reentranc
 
         devPending += quantity;
 
-        requestId = _requestVRF(uint32(quantity));
+        // uint32 cast safe: quantity bounded by DEV_BATCH_MAX (<<2^32), checked above
+        // forge-lint: disable-next-line(unsafe-typecast)
+        uint32 amount = uint32(quantity);
 
-        _devMintRequests[requestId] = DevMintRequest(to, uint32(quantity), block.number);
+        requestId = _requestVRF(amount);
+
+        _devMintRequests[requestId] = DevMintRequest({
+            to: to,
+            amount: amount,
+            requestBlock: block.number
+        });
         requestStatus[requestId] = CallbackStatus.PENDING;
         _pendingDevRequestIds.push(requestId);
 
@@ -1052,7 +1098,11 @@ contract SatoshiBestiaryV4 is ERC721C, ERC2981, VRFConsumerBaseV2Plus, Reentranc
     function retryDevMint(uint256 requestId) external onlyOwner nonReentrant returns (uint256 newRequestId) {
         DevMintRequest memory req = _validateAndExpireDevMint(requestId);
         newRequestId = _requestVRF(req.amount);
-        _devMintRequests[newRequestId] = DevMintRequest(req.to, req.amount, block.number);
+        _devMintRequests[newRequestId] = DevMintRequest({
+            to: req.to,
+            amount: req.amount,
+            requestBlock: block.number
+        });
         requestStatus[newRequestId] = CallbackStatus.PENDING;
         _pendingDevRequestIds.push(newRequestId);
         emit MintRetried(requestId, newRequestId, req.to);
@@ -1090,7 +1140,13 @@ contract SatoshiBestiaryV4 is ERC721C, ERC2981, VRFConsumerBaseV2Plus, Reentranc
     function retryMint(uint256 requestId) external nonReentrant returns (uint256 newRequestId) {
         MintRequest memory req = _validateAndExpireMint(requestId);
         newRequestId = _requestVRF(req.amount);
-        _mintRequests[newRequestId] = MintRequest(req.minter, req.amount, block.number, req.feePaid, req.isPreMint);
+        _mintRequests[newRequestId] = MintRequest({
+            minter: req.minter,
+            amount: req.amount,
+            requestBlock: block.number,
+            feePaid: req.feePaid,
+            isPreMint: req.isPreMint
+        });
         requestStatus[newRequestId] = CallbackStatus.PENDING;
         _pendingMintRequestIds.push(newRequestId);
         emit MintRetried(requestId, newRequestId, req.minter);

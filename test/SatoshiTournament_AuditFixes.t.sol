@@ -414,7 +414,7 @@ contract SatoshiTournamentAuditFixesTest is Test {
         vm.prank(organizer);
         tournament.depositNFTToTreasury(address(nft1), 400);
 
-        uint256 tid = _fullCycleArena();
+        _fullCycleArena();
 
         // Allocate NFT to tournament (can't do it in CLAIMABLE, so let's test with a new tournament)
         // Actually we need to test closeTournament flow properly
@@ -604,7 +604,7 @@ contract SatoshiTournamentAuditFixesTest is Test {
 
     /// @notice M-02: enableClaims succeeds when split covers all placements
     function test_M02_enableClaims_splitCoversAll_success() public {
-        uint256 tid = _fullCycleArena();
+        _fullCycleArena();
         // Already in CLAIMABLE — the fullCycle helper uses matching split/placements
         assertTrue(true, "enableClaims succeeded");
     }

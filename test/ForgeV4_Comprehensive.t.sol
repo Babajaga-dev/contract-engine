@@ -273,37 +273,37 @@ contract ForgeV4ComprehensiveTest is Test {
     //  BLOCCO A — getForgedTypeId PARAMETRIC (8 TESTS)
     // =====================================================================
 
-    function test_getForgedTypeId_MythicForged() public {
+    function test_getForgedTypeId_MythicForged() public view {
         uint8 typeId = forgeContract.getForgedTypeId(MYTHIC_FORGED_START);
         assertEq(typeId, 0, "MythicForged should return type 0");
     }
 
-    function test_getForgedTypeId_LegendaryForged() public {
+    function test_getForgedTypeId_LegendaryForged() public view {
         uint8 typeId = forgeContract.getForgedTypeId(LEGENDARY_FORGED_START);
         assertEq(typeId, 1, "LegendaryForged should return type 1");
     }
 
-    function test_getForgedTypeId_EpicForged() public {
+    function test_getForgedTypeId_EpicForged() public view {
         uint8 typeId = forgeContract.getForgedTypeId(EPIC_FORGED_START);
         assertEq(typeId, 2, "EpicForged should return type 2");
     }
 
-    function test_getForgedTypeId_RareForged() public {
+    function test_getForgedTypeId_RareForged() public view {
         uint8 typeId = forgeContract.getForgedTypeId(RARE_FORGED_START);
         assertEq(typeId, 3, "RareForged should return type 3");
     }
 
-    function test_getForgedTypeId_MythicShard() public {
+    function test_getForgedTypeId_MythicShard() public view {
         uint8 typeId = forgeContract.getForgedTypeId(MYTHIC_SHARD_START);
         assertEq(typeId, 4, "MythicShard should return type 4");
     }
 
-    function test_getForgedTypeId_Apex() public {
+    function test_getForgedTypeId_Apex() public view {
         uint8 typeId = forgeContract.getForgedTypeId(APEX_START);
         assertEq(typeId, 5, "Apex should return type 5");
     }
 
-    function test_getForgedTypeId_Reliquia() public {
+    function test_getForgedTypeId_Reliquia() public view {
         uint8 typeId = forgeContract.getForgedTypeId(RELIQUIA_START);
         assertEq(typeId, 6, "Reliquia should return type 6");
     }
@@ -392,7 +392,7 @@ contract ForgeV4ComprehensiveTest is Test {
         assertEq(forgeContract.reliquiaCount(), 1, "Reliquia count should be 1");
     }
 
-    function test_crossContract_forgeReliquia_Step7_Reverts() public {
+    function test_crossContract_forgeReliquia_Step7_Reverts() public view {
         // Verify step 7 is NOT active (only 0-6 should be)
         bool step7Active = forgeContract.forgeStepActive(7);
         assertFalse(step7Active, "Step 7 should not be active");
@@ -546,7 +546,7 @@ contract ForgeV4ComprehensiveTest is Test {
         assertTrue(true, "Secondary market Reliquia: works without per-wallet restrictions");
     }
 
-    function test_BatchRefund_Pagination_Shifts() public {
+    function test_BatchRefund_Pagination_Shifts() public pure {
         // Verify pagination doesn't skip elements
         // Note: refundAllExpiredShards in Forge doesn't have pagination
         // but the test documents the mechanism
@@ -604,13 +604,13 @@ contract ForgeV4ComprehensiveTest is Test {
     //  BLOCCO E — _assignShardType PARAMETRIC (3 TESTS)
     // =====================================================================
 
-    function test_assignShardType_9Shards_Balanced() public {
+    function test_assignShardType_9Shards_Balanced() public pure {
         // 9 MythicForged requires 900 Common + 450 Rare + 225 Epic cards — exceeds setUp capacity
         // This test requires a dedicated setUp with 900+ commons. Stubbed for documentation.
         assertTrue(true, "9-shard balanced test requires dedicated setUp with 900+ commons");
     }
 
-    function test_assignShardType_21Shards_Balanced() public {
+    function test_assignShardType_21Shards_Balanced() public pure {
         // Create 21 MythicForged cards
         // Note: This requires many cards, so we'll do a smaller test
         // Deploy a test forge with different maxMythicShard

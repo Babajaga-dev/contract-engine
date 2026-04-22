@@ -502,7 +502,7 @@ contract BestiaryV4PremintTest is Test {
     //  SECTION E: PREMINT STATS VIEW + EDGE CASES (3 test)
     // =====================================================================
 
-    function test_premintStats_initial() public {
+    function test_premintStats_initial() public view {
         assertEq(bestiary.preminted(), 0);
         assertEq(bestiary.premintPending(), 0);
         assertEq(bestiary.PREMINT_MAX_SUPPLY(), 210);
