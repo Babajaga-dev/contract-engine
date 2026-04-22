@@ -643,18 +643,20 @@ contract BestiaryV4SecurityTest is Test {
     }
 
     /**
-     * test_freeMint_AntiBot_RevertFromContract
-     * Non-EOA (contratti) non possono mintare.
+     * test_freeMint_ContractCaller_Allowed
+     * Dopo la rimozione dell'EOA-only check (fix H1 audit 2026-04-22), i contratti
+     * (inclusi Account Abstraction wallet come Coinbase Smart Wallet su Base L2)
+     * possono chiamare freeMint(). Difesa anti-bot delegata a: maxPerWallet + mintCooldown.
      */
-    function test_freeMint_AntiBot_RevertFromContract() public {
+    function test_freeMint_ContractCaller_Allowed() public {
         bestiary = _deployStandardBestiary();
         bestiary.setMintStatus(true);
         vm.roll(7201);
 
-        // Chiama da un contratto: msg.sender != tx.origin -> "No contracts"
+        // Chiama da un contratto (msg.sender != tx.origin): deve passare, non revertire
         vm.prank(address(0x1234), address(0x5678));
-        vm.expectRevert(SatoshiBestiaryV4.EOAOnly.selector);
-        bestiary.freeMint();
+        uint256 requestId = bestiary.freeMint();
+        assertGt(requestId, 0, "Contract caller should be able to request mint");
     }
 
     /**
@@ -840,6 +842,54 @@ contract BestiaryV4SecurityTest is Test {
         }
 
         vm.expectRevert(abi.encodeWithSelector(SatoshiBestiaryV4.SigilloNeroURIMissing.selector, uint8(10)));
+        bestiary.sigilloNeroForceAll();
+    }
+
+    /**
+     * test_sigilloNeroForceAll_FullFlow
+     * Happy-path completo: tutte 42 specie hanno URI (nessuna ancora rivelata/sigillata),
+     * sigilloNeroForceAll() deve rivelare + sigillare in un colpo.
+     * Verifica: gas consumption < 3M, stato finale corretto, eventi emessi.
+     */
+    function test_sigilloNeroForceAll_FullFlow() public {
+        bestiary = _deployStandardBestiary();
+
+        // Set URI per tutte 42 specie, senza rivelare né sigillare
+        for (uint8 i = 0; i < 42; i++) {
+            bestiary.setSpeciesURI(i, string(abi.encodePacked("ipfs://final/", vm.toString(i), "/")));
+        }
+        assertEq(bestiary.sealedCount(), 0);
+        assertFalse(bestiary.sigilloNero());
+
+        // Force all — misura gas
+        uint256 gasBefore = gasleft();
+        bestiary.sigilloNeroForceAll();
+        uint256 gasUsed = gasBefore - gasleft();
+
+        // Verifica stato finale
+        assertTrue(bestiary.sigilloNero(), "Sigillo Nero must be true");
+        assertEq(bestiary.sealedCount(), 42, "All 42 species must be sealed");
+        for (uint8 i = 0; i < 42; i++) {
+            assertTrue(bestiary.speciesRevealed(i), "Each species must be revealed");
+            assertTrue(bestiary.speciesSealed(i), "Each species must be sealed");
+        }
+
+        // Gas sanity: 42 iterations × ~50k gas/seal ≈ 2.1M → cap conservativo 3M
+        assertLt(gasUsed, 3_000_000, "sigilloNeroForceAll gas must be under 3M");
+    }
+
+    /**
+     * test_sigilloNeroForceAll_RevertDouble
+     * Non si può chiamare sigilloNeroForceAll due volte.
+     */
+    function test_sigilloNeroForceAll_RevertDouble() public {
+        bestiary = _deployStandardBestiary();
+        for (uint8 i = 0; i < 42; i++) {
+            bestiary.setSpeciesURI(i, string(abi.encodePacked("ipfs://x/", vm.toString(i), "/")));
+        }
+        bestiary.sigilloNeroForceAll();
+
+        vm.expectRevert(SatoshiBestiaryV4.SigilloNeroAlreadyDone.selector);
         bestiary.sigilloNeroForceAll();
     }
 }

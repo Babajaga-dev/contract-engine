@@ -258,7 +258,6 @@ contract SatoshiBestiaryV4 is ERC721C, ERC2981, VRFConsumerBaseV2Plus, Reentranc
     error NoTokensProvided();
     error NoPendingRefund();
     // STEP 1: Custom errors per require testuali
-    error EOAOnly();
     error MaxPerWallet();
     error CooldownActive();
     error SupplyExhausted();
@@ -478,7 +477,6 @@ contract SatoshiBestiaryV4 is ERC721C, ERC2981, VRFConsumerBaseV2Plus, Reentranc
 
     function freeMint() external nonReentrant whenNotPaused returns (uint256 requestId) {
         if (!publicMintActive) revert MintInactive();
-        if (msg.sender != tx.origin) revert EOAOnly();
         if (mintedPerWallet[msg.sender] + pendingPerWallet[msg.sender] + mintBlock > maxPerWallet) revert MaxPerWallet();
         if (block.number < lastMintBlock[msg.sender] + mintCooldown) revert CooldownActive();
         if (publicMinted + publicPending + preminted + premintPending + mintBlock > publicSupply) revert SupplyExhausted();
@@ -511,7 +509,6 @@ contract SatoshiBestiaryV4 is ERC721C, ERC2981, VRFConsumerBaseV2Plus, Reentranc
     function preMint() external nonReentrant whenNotPaused returns (uint256 requestId) {
         if (!preMintActive) revert PreMintInactive();
         if (!allowlisted[msg.sender]) revert NotAllowlisted();
-        if (msg.sender != tx.origin) revert EOAOnly();
         if (premintedPerWallet[msg.sender] + premintPendingPerWallet[msg.sender] + mintBlock > maxPerWallet)
             revert MaxPerWallet();
         if (block.number < lastMintBlock[msg.sender] + mintCooldown) revert CooldownActive();
@@ -548,7 +545,6 @@ contract SatoshiBestiaryV4 is ERC721C, ERC2981, VRFConsumerBaseV2Plus, Reentranc
         if (quantity == 0 || quantity > mintBlock) revert InvalidMintAmount();
         uint256 totalCost = mintPrice * quantity;
         if (msg.value != totalCost) revert InsufficientMintPayment();
-        if (msg.sender != tx.origin) revert EOAOnly();
         if (mintedPerWallet[msg.sender] + pendingPerWallet[msg.sender] + quantity > maxPerWallet) revert MaxPerWallet();
         // No cooldown for paid mints — paying users should not be throttled
         if (publicMinted + publicPending + preminted + premintPending + quantity > publicSupply) revert SupplyExhausted();

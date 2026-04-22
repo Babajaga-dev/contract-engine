@@ -288,11 +288,10 @@ contract BestiaryV4PremintTest is Test {
         fast.setAllowlist(wallets);
         fast.setPreMintStatus(true);
 
-        // msg.sender = this (contract), tx.origin would differ → EOAOnly
-        // Note: in Foundry, address(this) as prank would match tx.origin,
-        // so we need a different approach. We test that a contract call reverts.
-        // This test verifies the EOA check is present in the code.
-        assertTrue(true); // Structural test — EOA check verified by code review
+        // After fix H1 (2026-04-22) the EOA-only check is removed: contract callers
+        // (Account Abstraction wallets) are allowed. This test used to verify the
+        // now-removed revert; kept as placeholder to document the decision.
+        assertTrue(true, "EOA-only check removed — AA wallets supported");
     }
 
     function test_preMint_VRF_callback_updates_counters() public {
