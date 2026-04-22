@@ -294,7 +294,7 @@ contract ForgeV4NoWalletLimitTest is Test {
     //  SECTION B: GLOBAL SUPPLY CAP STILL ENFORCED (3 TESTS)
     // =====================================================================
 
-    function test_GlobalCap_maxReliquia21_Enforced() public {
+    function test_GlobalCap_maxReliquia21_Enforced() public view {
         // Global supply cap (maxReliquia = 21) is STILL enforced
         // Even though per-wallet limit is removed, wallet still cannot exceed global supply
 
@@ -347,7 +347,7 @@ contract ForgeV4NoWalletLimitTest is Test {
     //  SECTION C: NO RELIQUIAPERWALLET MAPPING (2 TESTS)
     // =====================================================================
 
-    function test_NoReliquiaPerWallet_Getter_DoesNotExist() public {
+    function test_NoReliquiaPerWallet_Getter_DoesNotExist() public pure {
         // The reliquiaPerWallet mapping should NOT exist in the contract
         // If it did, we could call: forgeContract.reliquiaPerWallet(alice)
         // Attempting this should revert with "function not found"
@@ -357,7 +357,7 @@ contract ForgeV4NoWalletLimitTest is Test {
         assertTrue(true, "reliquiaPerWallet mapping confirmed removed (no compile error)");
     }
 
-    function test_NoError_ReliquiaPerWalletExceeded() public {
+    function test_NoError_ReliquiaPerWalletExceeded() public pure {
         // The ReliquiaPerWalletExceeded error should NOT exist
         // This is verified at compile-time by the absence of the error definition
 
@@ -370,7 +370,7 @@ contract ForgeV4NoWalletLimitTest is Test {
     //  SECTION D: EXPECTED REVERTING CASE — GLOBAL SUPPLY (1 TEST)
     // =====================================================================
 
-    function test_ForgeReliquia_GlobalSupplyExceeded_Reverts() public {
+    function test_ForgeReliquia_GlobalSupplyExceeded_Reverts() public view {
         // This test documents the ONLY remaining supply limit: the global maxReliquia
         // If maxReliquia = 21, forging the 22nd should revert with ReliquiaMaxSupplyExceeded
 
