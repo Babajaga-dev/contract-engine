@@ -291,7 +291,7 @@ contract BestiaryV4PremintTest is Test {
         // After fix H1 (2026-04-22) the EOA-only check is removed: contract callers
         // (Account Abstraction wallets) are allowed. This test used to verify the
         // now-removed revert; kept as placeholder to document the decision.
-        assertTrue(true, "EOA-only check removed — AA wallets supported");
+        assertTrue(true, "EOA-only check removed - AA wallets supported");
     }
 
     function test_preMint_VRF_callback_updates_counters() public {
